@@ -25,25 +25,33 @@ if (!fs.existsSync(publicDir)) {
 // GET route for testing
 app.post("/delete", (req, res) => {
     const hlsUrl = req.body.data.hlsUrl;
+    // console.log("hlsUrl", hlsUrl);
     const files = fs.readdirSync(publicDir);
-
-    files.forEach((file) => {
-        if (file.match(hlsUrl)) {
-            fs.unlink(file, (err) => {
-                if (err) {
-                    console.error(`Error deleting file ${file}:`, err);
-                } else {
-                    console.log(`Deleted file: ${file}`);
-                }
-            });
-        }
-    });
+    // console.log("files", files);
+    const selectedVideo = files.find((video) => video === hlsUrl);
+    // console.log("selectedVideo", selectedVideo);
+    // console.log("cfdfd", );
+    fs.unlinkSync(path.join(publicDir, hlsUrl));
+    // console.log("File deleted after download.");
+    // if (selectedVideo) {
+    //     const filePath = path.join(__dirname, selectedVideo); // Use absolute path if needed
+    //     console.log("filePath", filePath);
+    //     fs.unlink(filePath, (err) => {
+    //         if (err) {
+    //             console.error(`Error deleting file ${selectedVideo}:`, err);
+    //         } else {
+    //             console.log(`Deleted file: ${selectedVideo}`);
+    //         }
+    //     });
+    // } else {
+    //     console.log(`File not found: ${hlsUrl}`);
+    // }
 });
 
 // POST API to convert HLS to MP4
 app.post("/convert", (req, res) => {
     const hlsUrl = req.body.data.hlsUrl;
-    console.log("hlsUrl");
+    // console.log("hlsUrl", hlsUrl);
     if (!hlsUrl) {
         return res.status(400).json({ error: "HLS URL is required" });
     }
